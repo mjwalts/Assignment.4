@@ -1,6 +1,7 @@
 # Step one, checking if code is existant and downloaded if not
 import urllib.request
 import os
+from collections import Counter
 
 url = 'https://s3.amazonaws.com/tcmg476/http_access_log'
 filename = 'log.txt'
@@ -68,3 +69,34 @@ for log_entry in log_data:
         total_requests2 += 1  # Increment the count if it falls within the period
 
 print(f"Total requests made in the time period: {total_requests2}")
+
+print("--------------------------------------------------")
+
+#------steps 5 and 6 code
+#initialize list for files
+file_list = []
+#iterate through each log entry
+for log in log_data:
+    full_line = []
+    line = []
+    full_line = log.split("GET ") #split line into lest where second element begins w file name
+    if len(full_line) > 1: # check if issa weird line
+        line = full_line[1].split(" ") #split elemnet containing file to isolate name
+        file = line[0] #define file var
+        file_list.append(file) #add file to list
+    else:
+        continue
+
+file_counts = Counter(file_list) #use Counter to count occurences of each file
+
+most_freq = file_counts.most_common(1) #set most recurring file
+least_freq = file_counts.most_common()[:-2:-1] # set least reccuring file
+
+#print output
+print(f"Most requested file: {most_freq[0][0]} (Count: {most_freq[0][1]})")
+print("--------------------------------------------------")
+print(f"Least requested file: {least_freq[0][0]} (Count: {least_freq[0][1]})")
+print("--------------------------------------------------")
+
+    
+
