@@ -146,7 +146,55 @@ for month, count in month_requests.items():
 
 print("--------------------------------------------------")
 
+#question 3 to lab 4
+total_requests = 0
+failed_requests = 0
 
+for log_entry in log_data:
+    if "[" in log_entry:
+        date_str = log_entry.split("[")[1].split(" ")[0]
+    log_date = datetime.strptime(date_str, "%d/%b/%Y:%H:%M:%S")
+
+    if start_date2 <= log_date <= end_date2:
+        total_requests += 1  # Increment the total request count
+
+        # Check if '" 40' is present in the log entry
+        if '" 40' in log_entry:
+            failed_requests += 1
+
+# Calculate the percentage of failed requests
+if total_requests > 0:
+    percentage_failed = (failed_requests / total_requests) * 100
+else:
+    percentage_failed = 0.0  # If there are no requests
+
+print(f"Percentage of 4xx status code: {percentage_failed:.2f}%")
+print("--------------------------------------------------")
+
+# question 4 to lab 4
+total_requests3 = 0
+status_3xx_requests = 0
+
+for log_entry in log_data:
+    if "[" in log_entry:
+        date_str = log_entry.split("[")[1].split(" ")[0]
+    log_date = datetime.strptime(date_str, "%d/%b/%Y:%H:%M:%S")
+
+    if start_date2 <= log_date <= end_date2:
+        total_requests3 += 1  
+
+        # Check if '0" 30' is present in the log entry
+        if '0" 30' in log_entry:
+            status_3xx_requests += 1  
+
+# Calculate the percentage code requests
+if total_requests3 > 0:
+    percentage_3xx = (status_3xx_requests / total_requests3) * 100
+else:
+    percentage_3xx = 0.0  # If there are no requests
+
+print(f"Percentage of 3xx status codes: {percentage_3xx:.2f}%")
+print("--------------------------------------------------")
 
 #------steps 5 and 6 code
 #initialize list for files
