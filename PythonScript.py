@@ -16,7 +16,7 @@ else:
 
 # rest of the code will go after this
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # define log file path
 
@@ -71,6 +71,82 @@ for log_entry in log_data:
 print(f"Total requests made in the time period: {total_requests2}")
 
 print("--------------------------------------------------")
+
+#------steps 1 and 2 code (assignment 4)
+
+# store requests per week and per month
+day_requests = {}
+week_requests = {}
+month_requests = {}
+
+# read log entries
+try:
+    with open(log_file_path, 'r') as file:
+        log_data = file.readlines()
+except FileNotFoundError:
+    print(f"The file '{log_file_path}' does not exist or cannot be accessed.")
+
+# process log entries
+for log_entry in log_data:
+    if "[" in log_entry: 
+        date_str = log_entry.split("[")[1].split(" ")[0]
+        log_date = datetime.strptime(date_str, "%d/%b/%Y:%H:%M:%S") 
+        day_str = log_date.strftime("%B %d, %Y")
+        
+        # requests per day count
+        if day_str in day_requests:
+            day_requests[day_str] += 1
+        else:
+            day_requests[day_str] = 1
+        
+        # requests per week count
+        while log_date.weekday() != 6:  # finds first Sunday before October 24th
+            log_date -= timedelta(days=1)
+        
+        # determine the start and end dates for the week
+        start_date = log_date
+        end_date = start_date + timedelta(days=6)
+        
+        # start week day (Sunday)
+        week_range = start_date.strftime("%B %d, %Y")
+        
+        if week_range in week_requests:
+            week_requests[week_range] += 1
+        else:
+            week_requests[week_range] = 1
+        
+        # separate month calculation
+        month_date = datetime.strptime(date_str, "%d/%b/%Y:%H:%M:%S")
+
+        # requests per month count
+        month_year = month_date.strftime("%B of %Y")  
+        if month_year in month_requests:
+            month_requests[month_year] += 1
+        else:
+            month_requests[month_year] = 1
+
+# requests per day
+print('Day Requests:')
+for day, count in day_requests.items():
+    print(f"{count} Requests made on {day}.")
+
+print("--------------------------------------------------")
+
+# print requests made per week
+print('Week Requests:')
+for week, count in week_requests.items():
+    print(f"{count} Requests Made for the Week of {week}.")
+
+print("--------------------------------------------------")
+
+# print requests made per month
+print('Month Requests:')
+for month, count in month_requests.items():
+    print(f"{count} Requests Made in {month}.")
+
+print("--------------------------------------------------")
+
+
 
 #------steps 5 and 6 code
 #initialize list for files
