@@ -1,6 +1,7 @@
 # Step one, checking if code is existant and downloaded if not
 import urllib.request
 import os
+from collections import Counter
 
 url = 'https://s3.amazonaws.com/tcmg476/http_access_log'
 filename = 'log.txt'
@@ -68,3 +69,81 @@ for log_entry in log_data:
         total_requests2 += 1  # Increment the count if it falls within the period
 
 print(f"Total requests made in the time period: {total_requests2}")
+
+print("--------------------------------------------------")
+
+#------steps 5 and 6 code
+#initialize list for files
+file_list = []
+#iterate through each log entry
+for log in log_data:
+    full_line = []
+    line = []
+    full_line = log.split("GET ") #split line into lest where second element begins w file name
+    if len(full_line) > 1: # check if issa weird line
+        line = full_line[1].split(" ") #split elemnet containing file to isolate name
+        file = line[0] #define file var
+        file_list.append(file) #add file to list
+    else:
+        continue
+
+file_counts = Counter(file_list) #use Counter to count occurences of each file
+
+most_freq = file_counts.most_common(1) #set most recurring file
+least_freq = file_counts.most_common()[:-2:-1] # set least reccuring file
+
+#print output
+print(f"Most requested file: {most_freq[0][0]} (Count: {most_freq[0][1]})")
+print("--------------------------------------------------")
+print(f"Least requested file: {least_freq[0][0]} (Count: {least_freq[0][1]})")
+print("--------------------------------------------------")
+
+#question 3 to lab 4
+total_requests = 0
+failed_requests = 0
+
+for log_entry in log_data:
+    if "[" in log_entry:
+        date_str = log_entry.split("[")[1].split(" ")[0]
+    log_date = datetime.strptime(date_str, "%d/%b/%Y:%H:%M:%S")
+
+    if start_date2 <= log_date <= end_date2:
+        total_requests += 1  # Increment the total request count
+
+        # Check if '" 40' is present in the log entry
+        if '" 40' in log_entry:
+            failed_requests += 1
+
+# Calculate the percentage of failed requests
+if total_requests > 0:
+    percentage_failed = (failed_requests / total_requests) * 100
+else:
+    percentage_failed = 0.0  # If there are no requests
+
+print(f"Percentage of 4xx status code: {percentage_failed:.2f}%")
+print("--------------------------------------------------")
+
+# question 4 to lab 4
+total_requests3 = 0
+status_3xx_requests = 0
+
+for log_entry in log_data:
+    if "[" in log_entry:
+        date_str = log_entry.split("[")[1].split(" ")[0]
+    log_date = datetime.strptime(date_str, "%d/%b/%Y:%H:%M:%S")
+
+    if start_date2 <= log_date <= end_date2:
+        total_requests3 += 1  
+
+        # Check if '0" 30' is present in the log entry
+        if '0" 30' in log_entry:
+            status_3xx_requests += 1  
+
+# Calculate the percentage code requests
+if total_requests3 > 0:
+    percentage_3xx = (status_3xx_requests / total_requests3) * 100
+else:
+    percentage_3xx = 0.0  # If there are no requests
+
+print(f"Percentage of 3xx status codes: {percentage_3xx:.2f}%")
+print("--------------------------------------------------")
