@@ -75,16 +75,16 @@ print("--------------------------------------------------")
 #------steps 5 and 6 code
 #initialize list for files
 file_list = []
-#iterate through each log entry
+#iterate through each log entry to make list of files
 for log in log_data:
     full_line = []
     line = []
     full_line = log.split("GET ") #split line into lest where second element begins w file name
-    if len(full_line) > 1: # check if issa weird line
+    if len(full_line) > 1: # check if line is valid request
         line = full_line[1].split(" ") #split elemnet containing file to isolate name
         file = line[0] #define file var
         file_list.append(file) #add file to list
-    else:
+    else: # if is default to index, don't count as request
         continue
 
 file_counts = Counter(file_list) #use Counter to count occurences of each file
