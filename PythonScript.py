@@ -199,28 +199,62 @@ print("--------------------------------------------------")
 #------steps 5 and 6 code
 #initialize list for files
 file_list = []
-#iterate through each log entry to make list of files
+
+# Iterate through each log entry to make a list of files
 for log in log_data:
     full_line = []
     line = []
-    full_line = log.split("GET ") #split line into lest where second element begins w file name
-    if len(full_line) > 1: # check if line is valid request
-        line = full_line[1].split(" ") #split elemnet containing file to isolate name
-        file = line[0] #define file var
-        file_list.append(file) #add file to list
-    else: # if is default to index, don't count as request
+    full_line = log.split("GET ")  # Split the line into a list where the second element begins with a file name
+    if len(full_line) > 1:  # Check if the line is a valid request
+        line = full_line[1].split(" ")  # Split the element containing the file to isolate its name
+        file = line[0]  # Define the file variable
+        file_list.append(file)  # Add the file to the list
+    else:  # If it's a default to index, don't count it as a request
         continue
 
-file_counts = Counter(file_list) #use Counter to count occurences of each file
+file_counts = Counter(file_list)  # Use Counter to count occurrences of each file
 
-most_freq = file_counts.most_common(1) #set most recurring file
-least_freq = file_counts.most_common()[:-2:-1] # set least reccuring file
+most_freq = file_counts.most_common(1)  # Set the most recurring file
+least_freq = file_counts.most_common()[:-2:-1]  # Set the least recurring file
 
-#print output
+# Print output
 print(f"Most requested file: {most_freq[0][0]} (Count: {most_freq[0][1]})")
 print("--------------------------------------------------")
 print(f"Least requested file: {least_freq[0][0]} (Count: {least_freq[0][1]})")
 print("--------------------------------------------------")
 
+# Code for splitting the log file into separate files by month
+
+# create folder for seperated logs
+if not os.path.exists("monthly_logs"):
+    os.mkdir("monthly_logs")
+
+# Dictionary to store log entries by month
+monthly_logs = {}
+
+# group log entry by month
+for log_entry in log_data:
+    if "[" in log_entry:
+        date_str = log_entry.split("[")[1].split(" ")[0]
+        log_date = datetime.strptime(date_str, "%d/%b/%Y:%H:%M:%S")
+
+        # Extract the month name
+        month_name = log_date.strftime("%B")
+
+        # Create file with month name
+        if month_name not in monthly_logs:
+            file_path = os.path.join("monthly_logs", f"{month_name}_Log.txt")  # Updated file name
+            monthly_logs[month_name] = open(file_path, "w")
+
+        # add log entry
+        monthly_logs[month_name].write(log_entry)
+
+# Close all the monthly log files
+for file in monthly_logs.values():
+    file.close()
     
+
+print("Log files have been split and separated by month.")
+#End
+
 
