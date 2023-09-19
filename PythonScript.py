@@ -50,8 +50,9 @@ for log_entry in log_data:
     elif (start_date <= log_date <= end_date):
         total_requests_in_6_months += 1  # Increment the count if it falls within the period
 
-# Decrement the count after the loop
-#total_requests_in_6_months -= 1
+# minus 1
+#total_requests_in_6_months -= 1 
+#We can delete the above hastag to subtract 1 from the total (dont judge)
 
 # Now 'total_requests_in_6_months' contains the total requests made in the 6 months
 print(f"Total requests made in the last 6 months: {total_requests_in_6_months}")

@@ -1,6 +1,5 @@
-# assignment-3
-This assignment is meant to help us deploy a program in python to an environment other than our own. 
-Please use this file as a guide on how to setup the program and neccesary things one must do before running. 
+# assignment-4
+This assignment was meant for us to expand on last week's python programming. It also allowed us to go back and fix a mistake we had. We were able to create a new code that was meant to answer the questions given to us this week. At the end of the program, the script will create a folder in the working directory and create multiple files from the original log file. It will split into 12 total files (1 per month) and move the requests to their respective month. 
 
 # Python Installation
 Please ensure you have python3 installed on your computer.
